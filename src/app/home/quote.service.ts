@@ -4,28 +4,22 @@ import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 const routes = {
-  quote: (c: RandomQuoteContext) => `/jokes/random?category=${c.category}`
+  quote: () => '/getRandomXkcdLink',
 };
 
-export interface RandomQuoteContext {
-  // The quote's category: 'dev', 'explicit'...
-  category: string;
-}
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class QuoteService {
+  constructor(private httpClient: HttpClient) {}
 
-  constructor(private httpClient: HttpClient) { }
-
-  getRandomQuote(context: RandomQuoteContext): Observable<string> {
-    return this.httpClient
-      .get(routes.quote(context))
-      .pipe(
-        map((body: any) => body.value),
-        catchError(() => of('Error, could not load joke :-('))
-      );
+  getRandomQuote(): Observable<string> {
+    return this.httpClient.get(routes.quote()).pipe(
+      map((body: any) => body),
+      catchError((err) => {
+        console.log(err.message);
+        throw 'error in source. Details: ' + err.message;
+      })
+    );
   }
-
 }
