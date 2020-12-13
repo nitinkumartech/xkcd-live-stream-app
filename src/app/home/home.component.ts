@@ -13,7 +13,7 @@ import { QuoteService } from './quote.service';
 })
 export class HomeComponent implements OnInit {
   timeInterval: Subscription;
-  quote: string | undefined;
+  quote: any | undefined;
   isLoading = false;
 
   constructor(private quoteService: QuoteService) {}
